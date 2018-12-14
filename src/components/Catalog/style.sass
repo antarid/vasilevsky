@@ -1,0 +1,76 @@
+.products-container
+	display: flex
+	justify-content: center
+	align-items: center
+
+.product-container
+	user-select: none
+	display: flex
+	align-items: center
+	padding: 10px 20px
+	margin-top: 10px
+	transition: all .3s ease
+	&.picked
+		background-color: red
+		.product
+			color: #fff
+			background-color: red
+			&-name
+				color: #fff
+	.checkbox
+		background-color: #fff
+		color: #000
+		margin-right: 20px
+		width: 10%
+		text-align: center
+		width: 30px
+		height: 30px
+		display: flex
+		justify-content: center
+		align-items: center
+		border-radius: 3px
+		border: 1px solid #000000
+		cursor: pointer
+		&.picked
+			color: #fff
+			background-color: #6BB886
+	.product
+		transition: all .5s ease
+		background-color: #fafafa
+		display: flex
+		width: calc(100% - 35px) 
+		&-image
+			width: 100px
+			height: 100px
+			background-size: cover
+			background-position: center
+		&-info
+			padding: 10px 30px
+			display: flex
+			width: calc(100% - 120px)
+		&-name
+			text-decoration: none
+			color: #000000
+			font-size: 25px
+			&:hover
+				color: #8477DB
+		&-price
+			text-align: right
+			font-size: 22px
+			font-weight: bold
+
+.buy-button
+	z-index: 100
+	text-decoration: none
+	position: fixed
+	bottom: 10%
+	left: 10%
+	padding: 10px 30px
+	color: #fff
+	background-color: green
+	transform: translateX(-300px)
+	opacity: 0
+	transition: all .3s ease
+	&.active
+		transform: translateX(0px)
+		opacity: 1
