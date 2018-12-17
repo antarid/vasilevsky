@@ -1,17 +1,28 @@
 import axios from 'axios';
 
-const productsFetched = products => ({
-  type: 'PRODUCTS_FETCHED',
+const successfullyCatalogFetched = products => ({
+  type: 'SUCCESSFULLY_CATALOG_FETCHED',
   products
 });
 
-export const tryFetchProducts = () => dispatch => {
-  axios.get('http://localhost:8080/products').then(res => {
-    dispatch(productsFetched(res.data));
-  });
-};
-
-export const toggleProduct = id => ({
-  type: 'TOGGLE_FROM_ORDER',
-  id
+const unsuccessfullyCatalogFetched = error => ({
+  type: 'UNSUCCESSFULLY_CATALOG_FETCHED',
+  error
 });
+
+const tryFetchCatalog = () => ({
+  type: 'TRY_FETCH_CATALOG'
+});
+
+export const fetchCatalog = () => dispatch => {
+  dispatch(tryFetchCatalog());
+  axios
+    .get('http://localhost:8080/products')
+    .then(res => {
+      if (res.data.err) dispatch(unsuccessfullyCatalogFetched(res.data.err));
+      else dispatch(successfullyCatalogFetched(res.data));
+    })
+    .catch(err => {
+      dispatch(unsuccessfullyCatalogFetched(err));
+    });
+};

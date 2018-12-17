@@ -16,11 +16,11 @@ class Header extends React.Component {
         </div>
         <div className="login">
           {this.props.user.loggedIn ? (
-            <button className="login-button" onClick={this.props.logout}>
+            <button className="button" onClick={this.props.logout}>
               log out
             </button>
           ) : (
-            <NavLink to="/login" className="login-button">
+            <NavLink to="/login" className="button">
               log in
             </NavLink>
           )}

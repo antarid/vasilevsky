@@ -55,12 +55,12 @@ router.get('/cards', (req, res) => {
   for (let i = 0; i < 5; i++) {
     cards.push(
       new Card({
-        number: parseInt(Math.random() * 89999999 + 10000000),
+        number: parseInt(Math.random() * 8999999999999999 + 1000000000000000),
         cvv: parseInt(Math.random() * 899 + 100),
         month: parseInt(Math.random() * 11 + 1),
         year: parseInt(Math.random() * 4 + 18),
         holder: 'Card Holder',
-        money: 1000
+        money: 3000
       })
     );
   }

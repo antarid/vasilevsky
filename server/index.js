@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const initRouter = require('./routes/init');
 const authRouter = require('./routes/auth');
 const productsRoute = require('./routes/products');
+const buyRoute = require('./routes/buy');
 const app = express();
 
 app.use(bodyParser.json());
@@ -14,6 +15,7 @@ app.use(cors({origin: '*'}));
 app.use('/init', initRouter);
 app.use('/auth', authRouter);
 app.use('/products', productsRoute);
+app.use('/buy', buyRoute);
 
 app.listen(8080, () => {
   console.log('on port 8080');

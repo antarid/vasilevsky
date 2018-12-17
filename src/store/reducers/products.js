@@ -1,14 +1,12 @@
 const initState = {
-  products: [],
-  isLoaded: false
+  products: []
 };
 
 export default (state = initState, action) => {
   switch (action.type) {
-    case 'PRODUCTS_FETCHED':
+    case 'SUCCESSFULLY_CATALOG_FETCHED':
       return {
         ...state,
-        isLoaded: true,
         products: action.products.map(product => ({...product, picked: false}))
       };
     case 'REMOVE_FROM_ORDER':

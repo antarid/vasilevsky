@@ -1,68 +1,101 @@
 import React from 'react';
 import './style.sass';
 import {connect} from 'react-redux';
+import {
+  changeOrderedCount,
+  removeProductFromOrder
+} from '../../store/actions/order';
+import {NavLink} from 'react-router-dom';
+import _ from 'lodash';
 
 class Order extends React.Component {
-  constructor(props) {
-    super(props);
-    console.log(props);
-    this.state = {
-      orders: this.props.orders
-    };
-  }
-  orderQuantityChangedHander = (id, delta) => {
-    const indexOfOrder = this.state.orders.map(order => order.id).indexOf(id);
-    const order = this.state.orders[indexOfOrder];
-    console.log(order);
-    let newQuantity = order.orderedQuantity + delta;
-    newQuantity = Math.min(newQuantity, order.quantity);
-    newQuantity = Math.max(newQuantity, 0);
-    order.orderedQuantity = newQuantity;
-    this.setState({
-      orders: this.state.orders.map(o => (o.id === indexOfOrder ? order : o))
-    });
-  };
   render() {
-    return (
-      <div className="container">
-        <div className="row">
-          <div className="col-8 offset-2">
-            {this.state.orders &&
-              this.state.orders.map(order => (
+    if (Object.keys(this.props.order).length)
+      return (
+        <div className="container">
+          <div className="row">
+            <div className="col-8 offset-2">
+              {_.map(this.props.order, order => (
                 <OrderItem
-                  orderQuantityChange={this.orderQuantityChangedHander}
+                  orderQuantityChange={this.props.changeOrderedCount}
+                  removeProductFromOrder={this.props.removeProductFromOrder}
                   {...order}
                 />
               ))}
+              <div className="row">
+                <div className="total">
+                  <div className="total-number">
+                    Total:{' '}
+                    {_.reduce(
+                      this.props.order,
+                      (acc, {orderedQuantity, price}) =>
+                        acc + orderedQuantity * price,
+                      0
+                    )}
+                    $
+                  </div>
+                  <NavLink className="button green" to="/card">
+                    Pay
+                  </NavLink>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      );
+    return (
+      <div className="d-flex align-items-center justify-content-center flex-column">
+        <h1>You have no orders</h1>
+        <NavLink to="/" className="button green">
+          Go to catalog
+        </NavLink>
       </div>
     );
   }
 }
 
-const OrderItem = ({orderQuantityChange, orderedQuantity, name, image, id}) => (
+const OrderItem = ({orderQuantityChange, removeProductFromOrder, ...info}) => (
   <div className="row order">
     <div className="col-4">
-      <div className="order-img" style={{backgroundImage: `url(${image})`}} />
+      <div
+        className="order-img"
+        style={{backgroundImage: `url(${info.image})`}}
+      />
     </div>
-    <div className="col-4">{name}</div>
+    <div className="col-4">{info.name}</div>
     <div className="col-4">
+      <div
+        className="remove-button"
+        onClick={() => removeProductFromOrder(info.id)}
+      >
+        x
+      </div>
       <div className="controllers">
-        <div className="controller" onClick={() => orderQuantityChange(id, -1)}>
+        <div
+          className="controller"
+          onClick={() => orderQuantityChange(info.id, -1)}
+        >
           -
         </div>
-        <div className="number">{orderedQuantity}</div>
-        <div className="controller" onClick={() => orderQuantityChange(id, 1)}>
+        <div className="number">{info.orderedQuantity}</div>
+        <div
+          className="controller"
+          onClick={() => orderQuantityChange(info.id, 1)}
+        >
           +
         </div>
       </div>
+      <div className="item-total">{info.orderedQuantity * info.price}$</div>
     </div>
   </div>
 );
 
-export default connect(state => ({
-  orders: state.products.products
-    .filter(product => product.picked)
-    .map(product => ({...product, orderedQuantity: product.quantity}))
-}))(Order);
+export default connect(
+  state => ({
+    order: state.order
+  }),
+  dispatch => ({
+    changeOrderedCount: (id, delta) => dispatch(changeOrderedCount(id, delta)),
+    removeProductFromOrder: id => dispatch(removeProductFromOrder(id))
+  })
+)(Order);
