@@ -2,8 +2,10 @@ import React from 'react';
 import './style.sass';
 import _ from 'lodash';
 import ConfirmButton from './ConfirmButton';
+import {connect} from 'react-redux';
+import {BeatLoader} from 'react-spinners';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
   state = {
     mode: 'login',
     values: {
@@ -101,6 +103,18 @@ export default class Login extends React.Component {
     });
   };
   render() {
+    const {pending, error} = this.props.ui;
+    let statusContent = null;
+    if (pending)
+      statusContent = (
+        <BeatLoader
+          sizeUnit={'px'}
+          size={20}
+          color={'#36D7B7'}
+          loading={true}
+        />
+      );
+    else if (error) statusContent = error;
     return (
       <div className="wrap">
         <button className="toggle" onClick={this.toggleMode}>
@@ -114,7 +128,8 @@ export default class Login extends React.Component {
             field={value}
           />
         ))}
-        <ConfirmButton {...this.state} />
+        <ConfirmButton {...this.state} history={this.props.history} />
+        <div style={{marginTop: 20, color: 'red'}}>{statusContent}</div>
       </div>
     );
   }
@@ -139,3 +154,7 @@ const Input = ({onFieldBlur, onFieldChange, fieldName, field}) => {
     />
   );
 };
+
+export default connect(state => ({
+  ui: state.ui.login
+}))(Login);

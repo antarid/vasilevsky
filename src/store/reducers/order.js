@@ -30,6 +30,8 @@ export default (state = initState, action) => {
         ...state,
         [action.id]: {...state[action.id], orderedQuantity: newQuantity}
       };
+    case 'DESTROY_ORDER':
+      return {};
     default:
       return state;
   }

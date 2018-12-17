@@ -15,7 +15,7 @@ router.post('/', verifyToken, (req, res) => {
       else return card;
     })
     .then(card => {
-      //card.money = card.money - totalSum;
+      card.money = card.money - totalSum;
       return card.save();
     })
     .then(() => {

@@ -5,8 +5,10 @@ const jwt = require('jsonwebtoken');
 
 router.post('/login', (req, res) => {
   const {email, password} = req.body;
+  console.log(req.body);
   User.findOne({email, password})
     .then(user => {
+      console.log(user);
       if (user) {
         const token = jwt.sign(
           {id: user.id, name: user.name, email: user.password},

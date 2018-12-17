@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const login = ({token, name, email}) => ({
-  type: 'LOGIN',
+  type: 'SUCCESSFULLY_LOGGED_IN',
   token,
   name,
   email
@@ -15,7 +15,6 @@ export const logout = () => {
 };
 
 const saveLoginData = ({email, name, token}) => dispatch => {
-  console.log(token);
   window.localStorage.setItem('authtoken', token);
   dispatch(login({email, name, token}));
 };
@@ -30,32 +29,29 @@ export const tryAuth = () => dispatch => {
     });
 };
 
-export const tryLogin = (email, password) => dispatch =>
+export const tryLogin = (mode, data, history) => dispatch => {
+  dispatch({type: 'TRY_LOGIN'});
   axios
-    .post('http://localhost:8080/auth/login', {
-      email,
-      password
+    .post('http://localhost:8080/auth/' + mode, {
+      ...data
     })
     .then(res => {
-      if (res.data.err) throw res.data.err;
+      console.log(res);
+      if (res.data.err)
+        dispatch({
+          type: 'UNSUCCESSFULLY_LOGGED_IN',
+          error: res.data.err
+        });
       else {
+        console.log('here', res.data);
         dispatch(saveLoginData({...res.data}));
-        Promise.resolve();
+        history.push('/');
       }
-    });
-
-export const trySignup = (email, password, name) => dispatch =>
-  axios
-    .post('http://localhost:8080/auth/signup', {
-      name,
-      email,
-      password
     })
-    .then(res => {
-      if (res.data.err) throw res.data.err;
-      else {
-        console.log({...res.data}, 'trySignup');
-        dispatch(saveLoginData({...res.data}));
-        Promise.resolve();
-      }
+    .catch(error => {
+      dispatch({
+        type: 'UNSUCCESSFULLY_LOGGED_IN',
+        error
+      });
     });
+};

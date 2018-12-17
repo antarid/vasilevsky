@@ -10,6 +10,7 @@ import {BeatLoader} from 'react-spinners';
 class Catalog extends React.Component {
   componentDidMount() {
     this.props.fetchCatalog();
+    console.log(this.props);
   }
   render() {
     const {success, pending, error} = this.props.ui;
@@ -41,7 +42,7 @@ class Catalog extends React.Component {
           <BeatLoader
             sizeUnit={'px'}
             size={30}
-            color={'#123abc'}
+            color={'#36D7B7'}
             loading={true}
           />
         </div>

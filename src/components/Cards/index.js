@@ -27,17 +27,29 @@ class Cards extends React.Component {
       );
     const {success, pending, error} = this.props.ui;
     let statusContent = null;
-    if (success) statusContent = 'success';
+    if (success)
+      statusContent = (
+        <div className="success">
+          <h3>Thank you for your purchase</h3>
+          <NavLink
+            className="button green"
+            to="/"
+            onClick={this.props.destroyOrder}
+          >
+            Contitue shopping
+          </NavLink>
+        </div>
+      );
     else if (pending)
       statusContent = (
         <BeatLoader
           sizeUnit={'px'}
           size={30}
-          color={'#123abc'}
+          color={'#36D7B7'}
           loading={true}
         />
       );
-    else if (error) statusContent = error;
+    else if (error) statusContent = <div className="error">{error}</div>;
     return (
       <div className="container">
         <div className="row">
@@ -57,5 +69,8 @@ export default connect(
     orderLength: Object.keys(state.order).length,
     ui: state.ui.card
   }),
-  dispatch => ({pay: cardInfo => dispatch(pay(cardInfo))})
+  dispatch => ({
+    pay: cardInfo => dispatch(pay(cardInfo)),
+    destroyOrder: () => dispatch({type: 'DESTROY_ORDER'})
+  })
 )(Cards);

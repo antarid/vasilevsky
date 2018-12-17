@@ -13,6 +13,11 @@ const initState = {
     success: false,
     pending: false,
     error: ''
+  },
+  login: {
+    success: false,
+    penging: false,
+    error: ''
   }
 };
 
@@ -34,6 +39,12 @@ export default (state = initState, action) => {
       return {...state, catalog: {...successfulState}};
     case 'UNSUCCESSFULLY_CATALOG_FETCHED':
       return {...state, catalog: {...unsuccessfulState, error: action.error}};
+    case 'TRY_LOGIN':
+      return {...state, login: {...pendingState}};
+    case 'SUCCESSFULLY_LOGGED_IN':
+      return {...state, login: {...successfulState}};
+    case 'UNSUCCESSFULLY_LOGGED_IN':
+      return {...state, login: {...unsuccessfulState, error: action.error}};
     default:
       return state;
   }

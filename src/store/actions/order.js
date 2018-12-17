@@ -48,7 +48,7 @@ export const pay = cardInfo => (dispatch, getState) => {
       if (res.data.err) {
         dispatch(unsuccessfullyPaid(res.data.err));
       } else {
-        dispatch(successfullyPaid(res.data));
+        dispatch(successfullyPaid(getState().order));
       }
     })
     .catch(err => {

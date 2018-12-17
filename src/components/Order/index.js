@@ -10,7 +10,30 @@ import _ from 'lodash';
 
 class Order extends React.Component {
   render() {
-    if (Object.keys(this.props.order).length)
+    if (!this.props.loggedIn)
+      return (
+        <div className="redirect-invite">
+          <h1>
+            You are not logged in, in order to order something, please log in...
+          </h1>
+          <NavLink className="button green" to="/login">
+            Log in
+          </NavLink>
+        </div>
+      );
+    else if (!Object.keys(this.props.order).length)
+      return (
+        <div className="redirect-invite">
+          <h1>
+            Please, pick any product, but if you don't want to buy anything you
+            can keep staring at this button...
+          </h1>
+          <NavLink className="button green" to="/">
+            Catalog
+          </NavLink>
+        </div>
+      );
+    else
       return (
         <div className="container">
           <div className="row">
@@ -43,14 +66,6 @@ class Order extends React.Component {
           </div>
         </div>
       );
-    return (
-      <div className="d-flex align-items-center justify-content-center flex-column">
-        <h1>You have no orders</h1>
-        <NavLink to="/" className="button green">
-          Go to catalog
-        </NavLink>
-      </div>
-    );
   }
 }
 
@@ -92,6 +107,7 @@ const OrderItem = ({orderQuantityChange, removeProductFromOrder, ...info}) => (
 
 export default connect(
   state => ({
+    loggedIn: state.user.loggedIn,
     order: state.order
   }),
   dispatch => ({

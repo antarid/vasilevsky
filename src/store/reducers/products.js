@@ -1,3 +1,4 @@
+import _ from 'lodash';
 const initState = {
   products: []
 };
@@ -25,14 +26,13 @@ export default (state = initState, action) => {
             : product
         )
       };
-    case 'BUY':
-      const productsPositions = state.products.map(product => product.id);
-      const tempProducts = state;
-      action.check.forEach(({id, quantity}) => {
-        const productPosision = productsPositions.indexOf(id);
-        tempProducts[productPosision].quantity -= quantity;
+    case 'SUCCESSFULLY_PAID':
+      const tempState = state;
+      _.forEach(tempState, item => {
+        if (action.order[item.id])
+          item.quantity -= action.order[item.id].orderedQuantity;
       });
-      return {...state, products: tempProducts};
+      return tempState;
     default:
       return state;
   }
